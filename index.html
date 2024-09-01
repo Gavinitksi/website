@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jar of Love Notes</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap'); /* Cute font */
+        body {
+    font-family: 'Pacifico', cursive;
+    background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+    color: #c42152;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: space-between; /* Ensure space between content and footer */
+    align-items: center;
+    min-height: 100vh; /* Ensure body takes up full viewport height */
+    margin: 0;
+}
+.container {
+    text-align: center;
+    flex: 1; /* Allow the container to grow and take up space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center;
+}
+
+        @keyframes wobble {
+            0% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+            100% { transform: rotate(-2deg); }
+        }
+
+        @keyframes bubble {
+            0% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(-10px); opacity: 0.7; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+        }
+
+        @keyframes jarFloat {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+        .jar-container {
+    position: relative;
+    display: inline-block;
+    width: 240px;
+    height: 350px;
+    margin-bottom: 30px;
+    background: rgba(135, 206, 250, 0.9); /* Glassy effect */
+    border-radius: 30px;
+    box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    background-image: url('https://www.transparenttextures.com/patterns/white-paper.png'),
+                      url('https://www.transparenttextures.com/patterns/soft-wallpaper.png');
+    background-blend-mode: overlay;
+    animation: wobble 5s infinite, jarFloat 6s infinite;
+    transition: box-shadow 0.3s ease;
+}
+
+        .jar-container:hover {
+            animation: none; /* Disable wobble on hover for a stable effect */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); /* Enhanced glow on hover */
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3); /* Light bubble color */
+            border-radius: 50%;
+            animation: bubble 3s infinite; /* Bubble animation */
+            z-index: 1;
+        }
+
+        .jar-top {
+    position: absolute;
+    width: 100%;
+    height: 80px; /* Slightly larger to cover the jar */
+    background: url('https://www.transparenttextures.com/patterns/dark-wood.png'), #8d6e63;
+    background-blend-mode: overlay;
+    border-radius: 50% 50% 0 0;
+    top: -40px; /* Adjusted for better fit */
+    left: 0;
+    z-index: 2;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
+}
+
+.jar-lid-detail {
+    position: absolute;
+    width: 100%;
+    height: 15px; /* Slightly thicker for realism */
+    background: url('https://www.transparenttextures.com/patterns/dark-wood.png'), #3e2723;
+    background-blend-mode: overlay;
+    top: 0;
+    left: 0;
+    border-radius: 50% 50% 0 0;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+        .jar-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(8px); /* Adjusted for stronger glass effect */
+    z-index: 1;
+    overflow: hidden;
+}
+
+        .note {
+            position: absolute; /* Ensure the note is positioned correctly */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust position to be centered */
+            width: 80%; /* Adjust width to fit well within the jar */
+            max-height: 80%; /* Prevents overflow */
+            color: #333; /* Darker text color for readability */
+            font-size: 1.1em; /* Slightly smaller font size for better fit */
+            padding: 15px; /* Adjusted padding for balance */
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly more opaque background for better visibility */
+            border-radius: 10px; /* Rounded corners for a softer look */
+            overflow-y: auto; /* Allows scrolling if text overflows */
+            box-sizing: border-box; /* Ensures padding and border are included in the width and height */
+            text-align: center; /* Center text alignment */
+            z-index: 2; /* Ensure it’s above other elements */
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly more pronounced shadow for better separation */
+        }
+
+        .paper {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            border-radius: 5px;
+            opacity: 0.8;
+            z-index: 0;
+            animation: float 4s ease-in-out infinite alternate; /* Floating animation */
+        }
+
+        .paper.pink {
+            background-color: #ff69b4;
+        }
+
+        .paper.blue {
+            background-color: #4fc3f7;
+        }
+
+        .paper.green {
+            background-color: #81c784;
+        }
+
+        .paper.orange {
+            background-color: #ffb74d;
+        }
+
+        .paper.purple {
+            background-color: #ba68c8;
+        }
+
+        button {
+    padding: 15px 30px;
+    background-color: #ff6f91;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin: 10px; /* Adjust the spacing between buttons */
+}
+
+button:hover {
+    background-color: #ff85b8;
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+    background-color: #ff6f91;
+    transform: scale(0.95);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+        footer {
+    margin-top: auto; /* Push footer to the bottom */
+    font-size: 1em;
+    color: #c42152;
+    padding: 20px; /* Add some padding */
+}
+         /* Modal Styles */
+         .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: glow 2s infinite; /* Glow animation for the modal */
+        }
+
+        .modal-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #e81919;
+        }
+
+        .modal-body {
+            font-size: 1.2em;
+            color: #333;
+            padding: 10px 0;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #aaa;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus {
+            color: #080105;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Archive Styles */
+        .archive {
+            margin-top: 30px;
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+            font-size: 1.2em;
+        }
+
+        .archive-item {
+            margin-bottom: 10px;
+            cursor: pointer;
+            color: #bb208f;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .archive-item:hover {
+            color: #ff85c8;
+        }
+        @media (max-width: 768px) {
+  /* Styles for tablets and mobile devices */
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Jar of Love Notes</h1>
+            <p>Open a note a day and feel the love!</p>
+        </header>
+        <div class="container">
+            <div class="jar-container">
+                <div class="jar-top">
+                    <div class="jar-lid-detail"></div>
+                </div>
+                <div class="jar-body">
+                    <div class="note">Open a note for daily dose of love!</div>
+                </div>
+                <div class="bubble" style="left: 40%; animation-delay: 0.2s;"></div>
+                <div class="bubble" style="left: 60%; animation-delay: 0.4s;"></div>
+                <div class="bubble" style="left: 20%; animation-delay: 0.6s;"></div>
+                <div class="bubble" style="left: 80%; animation-delay: 0.8s;"></div>
+                <div class="bubble" style="left: 50%; animation-delay: 1s;"></div>
+                <div class="paper pink" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+                <div class="paper blue" style="top: 30%; left: 10%; animation-delay: 0.5s;"></div>
+                <div class="paper green" style="top: 50%; left: 70%; animation-delay: 1s;"></div>
+                <div class="paper orange" style="top: 70%; left: 30%; animation-delay: 1.5s;"></div>
+                <div class="paper purple" style="top: 90%; left: 50%; animation-delay: 2s;"></div>
+            </div>
+             </div>
+             <button onclick="openNote()" aria-label="Open today's love note">Open Today's Note</button>
+<button onclick="goBack()" aria-label="Go back to previous note">Back</button>
+<button class="archive-button" onclick="showModal()">View Archived Notes</button>
+<button onclick="resetNotes()" aria-label="Reset to the first note">Reset</button>             
+<div class="archive" id="archive"></div>
+
+        </div> <!-- Modal -->
+        <div id="noteModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+                <div class="modal-header">Opened Notes</div>
+                <div class="modal-body" id="modalNotesContent"></div>
+            </div>
+        </div>
+        <footer>
+            Coded with love for you ❤️
+        </footer>
+        <script>
+    const notes = [
+    "Day 1: Hey, just a quick reminder that you’re amazing, and you’ve got this. Even on tough days, your strength shines through!",
+    "Day 2: Every day is a new opportunity to shine. Remember, you have so much to offer, and today is no different.",
+    "Day 3: You are doing great. I'm so proud of you!",
+    "Day 4: You’re doing better than you realize. Keep your head up and know that every day is a step towards brighter moments.",
+    "Day 5: You’ve overcome so much already. This is just another bump in the road, and you have the strength to get through it.",
+    "Day 6: Your heart is big, and your spirit is even bigger. Keep shining, and know that you’re capable of overcoming anything.",
+    "Day 7: Take things one day at a time, and remember that you’re making progress with every step you take.",
+    "Day 8: Sending you lots of love and positive energy. You’re stronger than you know, and brighter days are just around the corner.",
+    "Day 9: You have an incredible inner strength. Even when things seem hard, remember that you’re capable of amazing things.",
+    "Day 10: Hang in there! Even when things seem tough, remember that your resilience and spirit will see you through.",
+    "Day 11: You are valued, loved, and admired. Even on your hardest days, you make a difference just by being you.",
+    "Day 12: When life gets tough, remember that you are tougher. You have the strength and courage to face any challenge.",
+    "Day 13: Take a moment to breathe and remind yourself of all the amazing things you’ve accomplished. You’re doing great!",
+    "Day 14: I’m so proud of you for handling everything with such grace. You’re truly amazing, and I’m here for you always.",
+    "Day 15: You make my world a better place with your smile and love. Even on hard days, remember how much you mean to me",
+    "Day 16: Your heart is full of love and your spirit is unbreakable. Even when things are tough, you’re never alone.",
+    "Day 17: You’re a source of light and love in my life. Even when things seem difficult, your strength and positivity shine through.",
+    "Day 18: Your smile has a way of making everything seem better. Even on tough days, your presence is a source of comfort and joy.",
+    "Day 19: You’re a true fighter, and your strength amazes me every day. Keep pushing forward—you’re doing an incredible job.",
+    "Day 20: Even on the hardest days, your presence brings light and warmth. Remember, you’re loved more than you know.",
+    "Day 21: Hey beh, I want you to know that no matter what, you always bring out the best in me. Your strength is truly inspiring.",
+    "Day 22: Just a little reminder that you’re capable of amazing things. Even on the hardest days, you’re doing better than you realize",
+    "Day 23: You have a way of turning challenges into opportunities. Keep going, because your strength and resilience are truly remarkable",
+    "Day 24: Whenever you feel overwhelmed, remember that you’re not alone. I’m here for you, cheering you on every step of the way.",
+    "Day 25: You’re a beautiful person inside and out. Don’t let tough days dim your light; you shine brighter than you know.",
+    "Day 26: You’re like a breath of fresh air on a tough day. Your positivity and love make everything better, and I’m so grateful for you.",
+    "Day 27: Every challenge you face in your academic journey is a step towards your goals. Your perseverance is leading you to success.",
+    "Day 28: Your passion and determination in your studies are admirable. Keep pushing forward; your efforts will pay off in amazing ways.",
+    "Day 29: You’re making remarkable progress with your studies. Your hard work and dedication are truly paying off—keep it up!",
+    "Day 30: Here’s to you, my amazing partner, who makes every moment of our lives together truly extraordinary. I love you more than words can express, and I’m so proud of you."
+];
+
+let currentNoteIndex = parseInt(localStorage.getItem('currentNoteIndex')) || 0;
+let openedNotes = JSON.parse(localStorage.getItem('openedNotes')) || [];
+let noteHistory = JSON.parse(localStorage.getItem('noteHistory')) || [];
+
+// Function to open a note
+function openNote() {
+    const noteElement = document.querySelector('.note');
+    const defaultMessage = "Open a note a day and feel the love!";
+
+    // If the note element contains the default message, clear it
+    if (noteElement.textContent === defaultMessage) {
+        noteElement.textContent = '';
+    }
+
+    // Ensure the note content is defined
+    if (notes[currentNoteIndex]) {
+        let noteContent = notes[currentNoteIndex];
+        noteElement.textContent = noteContent;
+        openedNotes.push(noteContent);
+        noteHistory.push(currentNoteIndex); // Save current note index to history
+
+        // Save data to localStorage
+        localStorage.setItem('openedNotes', JSON.stringify(openedNotes));
+        localStorage.setItem('noteHistory', JSON.stringify(noteHistory));
+        localStorage.setItem('currentNoteIndex', currentNoteIndex);
+
+        // Increment the currentNoteIndex, cycling back to the beginning if necessary
+        currentNoteIndex = (currentNoteIndex + 1) % notes.length;
+    } else {
+        noteElement.textContent = "Error: Note content is undefined.";
+    }
+}
+
+// Initial setup to display the default message if no notes have been opened
+window.onload = function() {
+    const noteElement = document.querySelector('.note');
+    const defaultMessage = "Open a note a day and feel the love!";
+    if (openedNotes.length === 0 && noteHistory.length === 0) {
+        noteElement.textContent = defaultMessage; // Set default message
+    }
+};
+
+function goBack() {
+    if (noteHistory.length > 1) {
+        // Pop the current index and go back to the previous one
+        noteHistory.pop();
+        currentNoteIndex = noteHistory[noteHistory.length - 1];
+        document.querySelector('.note').textContent = notes[currentNoteIndex];
+    } else {
+        // Reset to the default message when there's no previous note
+        currentNoteIndex = 0; // Reset to Day 1 index
+        noteHistory = []; // Clear the history
+        document.querySelector('.note').textContent = "Open a note a day and feel the love!";
+    }
+
+    // Update localStorage with the new state
+    localStorage.setItem('noteHistory', JSON.stringify(noteHistory));
+    localStorage.setItem('currentNoteIndex', currentNoteIndex);
+}
+
+function resetNotes() {
+    // Reset to the first note
+    currentNoteIndex = 0;
+    noteHistory = []; // Clear note history
+
+    // Display the default message
+    const noteElement = document.querySelector('.note');
+    const defaultMessageText = "Open a note a day and feel the love!";
+
+    // Clear the current note content and set to default message
+    noteElement.textContent = defaultMessageText;
+
+    // Optionally hide the 'defaultMessage' element if it was being used separately
+    const defaultMessageElement = document.getElementById('defaultMessage');
+    if (defaultMessageElement) {
+        defaultMessageElement.style.display = 'none';
+    }
+
+    // Save the reset state to localStorage
+    localStorage.setItem('noteHistory', JSON.stringify(noteHistory));
+    localStorage.setItem('currentNoteIndex', currentNoteIndex);
+
+    // Reset any other related state variables if necessary
+    openedNotes = []; // Clear opened notes array
+    localStorage.removeItem('openedNotes'); // Clear from local storage if stored
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    checkDateAndReset();
+    const noteElement = document.querySelector('.note');
+    const defaultMessage = document.getElementById('defaultMessage');
+
+    if (openedNotes.length > 0) {
+        noteElement.textContent = openedNotes[openedNotes.length - 1];
+        defaultMessage.style.display = 'none'; // Hide the default message if notes have been opened
+    } else {
+        noteElement.textContent = '';
+        defaultMessage.style.display = 'block'; // Show the default message if no notes have been opened
+    }
+});
+
+function showModal() {
+    let modalNotesContent = document.getElementById("modalNotesContent");
+    modalNotesContent.innerHTML = openedNotes.map(note => `<div class="archive-item">${note}</div>`).join('');
+    document.getElementById("noteModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("noteModal").style.display = "none";
+}
+
+function checkDateAndReset() {
+    const lastDate = localStorage.getItem('lastDate');
+    const today = new Date().toDateString();
+
+    if (lastDate !== today) {
+        currentNoteIndex = 0; // Reset to the first note
+        noteHistory = []; // Clear note history
+        localStorage.setItem('noteHistory', JSON.stringify(noteHistory));
+        localStorage.setItem('currentNoteIndex', currentNoteIndex);
+        localStorage.setItem('lastDate', today);
+    }
+}
+
+document
+
+    </script>
+</body>
+</html>
